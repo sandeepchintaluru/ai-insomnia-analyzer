@@ -432,9 +432,7 @@ function showResult(data) {
     1: 'Some habits may be affecting your sleep quality. Small changes can help.',
     2: 'Your lifestyle patterns strongly suggest insomnia risk. Please seek help.'
   };
-<footer>
-    <p>Developed by Sandeep With Help Of Claude</p>
-</footer>
+
   const r = data.risk;
   const el = document.getElementById('result');
   el.style.display = 'block';
