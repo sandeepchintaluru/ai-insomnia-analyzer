@@ -5,15 +5,15 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load model
-with open("insomnia_model.pkl", 'rb') as f:
+with open("C:\\ai_insonmia\\insomnia_model.pkl", 'rb') as f:
     model = pickle.load(f)
 
-HTML = '''<!DOCTYPE html>
+HTML ='''<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Insomnia Risk Assessment</title>
+<title>AI-Based Insomnia Risk Analyzer</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
   :root {
@@ -37,7 +37,6 @@ HTML = '''<!DOCTYPE html>
     min-height: 100vh;
     overflow-x: hidden;
   }
-  /* Animated background */
   body::before {
     content: '';
     position: fixed;
@@ -151,6 +150,15 @@ HTML = '''<!DOCTYPE html>
   input[type=range]:hover::-webkit-slider-thumb {
     box-shadow: 0 0 0 6px rgba(124,106,247,0.3);
   }
+  input[type=range]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 0 4px rgba(124,106,247,0.2);
+  }
   .range-labels {
     display: flex;
     justify-content: space-between;
@@ -220,8 +228,7 @@ HTML = '''<!DOCTYPE html>
   .submit-btn:hover::before { left: 100%; }
   .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,106,247,0.4); }
   .submit-btn:active { transform: translateY(0); }
-
-  /* Result */
+  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
   #result {
     display: none;
     background: var(--card);
@@ -297,6 +304,51 @@ HTML = '''<!DOCTYPE html>
     transition: all 0.2s;
   }
   .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .stress-field-custom { grid-column: 1 / -1; }
+  .stress-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .stress-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .stress-card:hover {
+    border-color: var(--accent);
+    background: rgba(124, 106, 247, 0.08);
+    transform: translateY(-3px);
+  }
+  .stress-card.active {
+    border-color: var(--accent);
+    background: rgba(124, 106, 247, 0.15);
+    box-shadow: 0 0 0 2px rgba(124, 106, 247, 0.2);
+  }
+  .stress-emoji {
+    font-size: 32px;
+    line-height: 1;
+  }
+  .stress-text {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.3;
+    font-weight: 500;
+  }
+  .stress-card.active .stress-text {
+    color: var(--accent);
+  }
+  footer { text-align: center; margin-top: 40px; padding: 20px 0; }
+  footer p { color: var(--muted); font-size: 13px; font-family: 'Syne', sans-serif; letter-spacing: 0.08em; }
 </style>
 </head>
 <body>
@@ -326,12 +378,30 @@ HTML = '''<!DOCTYPE html>
           <div class="range-labels"><span>1h</span><span>10h</span></div>
         </div>
       </div>
-      <div class="field">
-        <label>Stress Level: <span class="val-badge" id="stress-val">5</span></label>
-        <div class="input-wrap">
-          <input type="range" id="stress_level" min="1" max="10" value="5"
-                 oninput="document.getElementById('stress-val').textContent=this.value"/>
-          <div class="range-labels"><span>Low</span><span>High</span></div>
+      <div class="field stress-field-custom">
+        <label>How's Your Stress Level?</label>
+        <input type="hidden" id="stress_level" value="5"/>
+        <div class="stress-cards">
+          <div class="stress-card" onclick="selectStressCard(this, 2)">
+            <div class="stress-emoji">😌</div>
+            <div class="stress-text">Calm &<br/>Relaxed</div>
+          </div>
+          <div class="stress-card" onclick="selectStressCard(this, 4)">
+            <div class="stress-emoji">🙂</div>
+            <div class="stress-text">Occasional<br/>Stress</div>
+          </div>
+          <div class="stress-card active" onclick="selectStressCard(this, 6)">
+            <div class="stress-emoji">😐</div>
+            <div class="stress-text">Moderate<br/>Stress</div>
+          </div>
+          <div class="stress-card" onclick="selectStressCard(this, 8)">
+            <div class="stress-emoji">😟</div>
+            <div class="stress-text">Frequently<br/>Stressed</div>
+          </div>
+          <div class="stress-card" onclick="selectStressCard(this, 10)">
+            <div class="stress-emoji">😰</div>
+            <div class="stress-text">Constantly<br/>Overwhelmed</div>
+          </div>
         </div>
       </div>
       <div class="field">
@@ -382,6 +452,11 @@ HTML = '''<!DOCTYPE html>
   </div>
 
   <div id="result"></div>
+
+  <footer>
+    <p>Developed with <span style="color:#7c6af7; font-weight:700;">❤️</span></p>
+  </footer>
+
 </div>
 
 <script>
@@ -391,36 +466,96 @@ const advice = {
   2: ["Consult a sleep specialist immediately","Set a strict consistent sleep/wake schedule","Avoid all caffeine after 12pm","No screens at least 2 hours before bed","Try meditation or deep breathing exercises","Consider cognitive behavioral therapy for insomnia"]
 };
 
-async function predict() {
+function predict() {
   const btn = document.querySelector('.submit-btn');
   btn.textContent = 'Analyzing...';
   btn.disabled = true;
 
-  const payload = {
-    age: +document.getElementById('age').value,
-    sleep_hours: +document.getElementById('sleep_hours').value,
-    screen_time: +document.getElementById('screen_time').value,
-    caffeine_cups: +document.getElementById('caffeine_cups').value,
-    exercise_days: +document.getElementById('exercise_days').value,
-    stress_level: +document.getElementById('stress_level').value,
-    nap_during_day: +document.querySelector('input[name=nap]:checked').value,
-    irregular_schedule: +document.querySelector('input[name=irreg]:checked').value
-  };
+  const age = +document.getElementById('age').value;
+  const sleep_hours = +document.getElementById('sleep_hours').value;
+  const screen_time = +document.getElementById('screen_time').value;
+  const caffeine_cups = +document.getElementById('caffeine_cups').value;
+  const exercise_days = +document.getElementById('exercise_days').value;
+  const stress_level = +document.getElementById('stress_level').value;
+  const nap_during_day = +document.querySelector('input[name=nap]:checked').value;
+  const irregular_schedule = +document.querySelector('input[name=irreg]:checked').value;
 
-  try {
-    const res = await fetch('/predict', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
+  // Simulate processing delay
+  setTimeout(() => {
+    // AI Logic: Calculate risk score based on inputs
+    let riskScore = 0;
+    
+    // Sleep hours analysis (ideal: 7-8 hours)
+    if (sleep_hours < 5) riskScore += 4;
+    else if (sleep_hours < 6) riskScore += 3;
+    else if (sleep_hours < 7) riskScore += 2;
+    else if (sleep_hours > 9) riskScore += 1;
+    
+    // Stress level (major factor)
+    if (stress_level >= 8) riskScore += 4;
+    else if (stress_level >= 6) riskScore += 3;
+    else if (stress_level >= 4) riskScore += 1;
+    
+    // Screen time before bed
+    if (screen_time > 4) riskScore += 3;
+    else if (screen_time > 2) riskScore += 2;
+    else if (screen_time > 0) riskScore += 1;
+    
+    // Caffeine intake
+    if (caffeine_cups > 4) riskScore += 2;
+    else if (caffeine_cups > 2) riskScore += 1;
+    
+    // Exercise (protective factor)
+    if (exercise_days < 2) riskScore += 2;
+    else if (exercise_days < 4) riskScore += 1;
+    
+    // Nap during day
+    if (nap_during_day === 1) riskScore += 2;
+    
+    // Irregular schedule
+    if (irregular_schedule === 1) riskScore += 3;
+    
+    // Age factor (older = slightly higher risk)
+    if (age > 55) riskScore += 1;
+    
+    // Determine risk level
+    let risk = 0;
+    if (riskScore >= 10 && riskScore < 15) risk = 1;
+    if (riskScore >= 15) risk = 2;
+    
+    // Calculate probabilities based on risk score
+    let probs;
+    if (risk === 0) {
+      probs = [Math.max(70, 100 - riskScore * 3), Math.max(10, riskScore * 2), Math.max(5, riskScore)];
+    } else if (risk === 1) {
+      probs = [Math.max(20, 60 - riskScore * 2), Math.max(30, 50 - riskScore), Math.max(10, riskScore - 5)];
+    } else {
+      probs = [Math.max(10, 30 - riskScore), Math.max(20, 40 - riskScore), Math.max(50, riskScore * 3)];
+    }
+    
+    // Normalize probabilities to sum to 100
+    const total = probs.reduce((a, b) => a + b, 0);
+    probs = probs.map(p => Math.round((p / total) * 100));
+    
+    showResult({
+      risk: risk,
+      probabilities: probs
     });
-    const data = await res.json();
-    showResult(data);
-  } catch(e) {
-    alert('Error: ' + e.message);
-  }
 
-  btn.textContent = 'Analyze My Sleep Risk →';
-  btn.disabled = false;
+    btn.textContent = 'Analyze My Sleep Risk →';
+    btn.disabled = false;
+  }, 1500);
+}
+
+function selectStressCard(element, value) {
+  // Remove active state from all cards
+  document.querySelectorAll('.stress-card').forEach(card => {
+    card.classList.remove('active');
+  });
+  // Add active state to selected card
+  element.classList.add('active');
+  // Update hidden input
+  document.getElementById('stress_level').value = value;
 }
 
 function showResult(data) {
@@ -461,6 +596,7 @@ function showResult(data) {
     <button class="reset-btn" onclick="document.getElementById('result').style.display='none'">Reassess ↺</button>
   `;
   el.scrollIntoView({behavior:'smooth'});
+  
   setTimeout(() => {
     document.getElementById('low-bar').style.width  = data.probabilities[0] + '%';
     document.getElementById('mid-bar').style.width  = data.probabilities[1] + '%';
@@ -470,7 +606,6 @@ function showResult(data) {
 </script>
 </body>
 </html>'''
-
 @app.route('/')
 def index():
     return render_template_string(HTML)
