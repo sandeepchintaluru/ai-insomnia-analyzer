@@ -507,11 +507,6 @@ async function predict() {
   btn.disabled = false;
 }
 
-    btn.textContent = 'Analyze My Sleep Risk →';
-    btn.disabled = false;
-  }, 1500);
-}
-
 function selectStressCard(element, value) {
   // Remove active state from all cards
   document.querySelectorAll('.stress-card').forEach(card => {
