@@ -454,7 +454,7 @@ HTML ='''<!DOCTYPE html>
   <div id="result"></div>
 
   <footer>
-    <p>Developed by <span style="color:#7c6af7; font-weight:700;">Sandeep</span></p>
+    <p>Developed by <span style="color:#7c6af7; font-weight:500;">Sandeep Chintaluru</span></p>
   </footer>
 
 </div>
