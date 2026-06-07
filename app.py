@@ -5,7 +5,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load model
-with open("C:\\ai_insonmia\\insomnia_model.pkl", 'rb') as f:
+with open("insomnia_model.pkl", 'rb') as f:
     model = pickle.load(f)
 
 HTML ='''<!DOCTYPE html>
