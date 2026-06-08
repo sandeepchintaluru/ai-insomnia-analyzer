@@ -418,7 +418,7 @@ HTML ='''<!DOCTYPE html>
     <div class="grid">
       <div class="field">
         <label>Screen Time Before Bed: <span class="val-badge" id="screen-val">2</span>h</label>
-        <input type="range" id="screen_time" min="0" max="6" step="0.5" value="2"
+        <input type="range" id="screen_time" min="0" max="10" step="0.5" value="2"
                oninput="document.getElementById('screen-val').textContent=this.value"/>
         <div class="range-labels"><span>0h</span><span>6h</span></div>
       </div>
@@ -461,7 +461,7 @@ HTML ='''<!DOCTYPE html>
 
 <script>
 const advice = {
-  0: ["Maintain your current sleep schedule","Keep up the regular exercise routine","Limit caffeine after 2pm as a precaution","Continue limiting screen time before bed"],
+  0: ["Maintain your current sleep schedule","💧 Stay hydrated throughout the day","🏃 Continue regular physical activity and exercise","Continue limiting screen time before bed"],
   1: ["Try to get 7-8 hours of sleep consistently","Reduce screen time 1 hour before bed","Cut caffeine intake after noon","Add light exercise 3-4 days a week","Practice relaxation techniques before sleep"],
   2: ["Consult a sleep specialist immediately","Set a strict consistent sleep/wake schedule","Avoid all caffeine after 12pm","No screens at least 2 hours before bed","Try meditation or deep breathing exercises","Consider cognitive behavioral therapy for insomnia"]
 };
