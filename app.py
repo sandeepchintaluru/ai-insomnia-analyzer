@@ -482,13 +482,13 @@ HTML ='''<!DOCTYPE html>
             <div class="job-emoji">🖥️</div>
             <div class="job-text">Desk / Office</div>
             <div class="job-desc">sitting most of the day</div>
-            <div class="job-activity-tag">low</div>
+            <div class="job-activity-tag">Low</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 1)">
             <div class="job-emoji">🏠</div>
             <div class="job-text">Work from Home</div>
             <div class="job-desc">seated, minimal movement</div>
-            <div class="job-activity-tag">low</div>
+            <div class="job-activity-tag">Low</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 2)">
             <div class="job-emoji">🚗</div>
