@@ -334,19 +334,79 @@ HTML ='''<!DOCTYPE html>
     background: rgba(124, 106, 247, 0.15);
     box-shadow: 0 0 0 2px rgba(124, 106, 247, 0.2);
   }
-  .stress-emoji {
-    font-size: 32px;
-    line-height: 1;
-  }
+  .stress-emoji { font-size: 32px; line-height: 1; }
   .stress-text {
     font-size: 12px;
     color: var(--muted);
     line-height: 1.3;
     font-weight: 500;
   }
-  .stress-card.active .stress-text {
-    color: var(--accent);
+  .stress-card.active .stress-text { color: var(--accent); }
+
+  /* ── Job Activity Cards ── */
+  .job-field-custom { grid-column: 1 / -1; }
+  .job-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
   }
+  .job-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .job-card:hover {
+    border-color: var(--accent2);
+    background: rgba(247, 106, 140, 0.08);
+    transform: translateY(-3px);
+  }
+  .job-card.active {
+    border-color: var(--accent2);
+    background: rgba(247, 106, 140, 0.15);
+    box-shadow: 0 0 0 2px rgba(247, 106, 140, 0.2);
+  }
+  .job-emoji { font-size: 26px; line-height: 1; }
+  .job-text {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.3;
+    font-weight: 500;
+  }
+  .job-card.active .job-text { color: var(--accent2); }
+  .job-activity-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(247, 106, 140, 0.12);
+    color: var(--accent2);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .job-card.active .job-activity-tag { opacity: 1; }
+  .activity-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .activity-hint span { color: var(--accent2); font-weight: 600; }
+
   footer { text-align: center; margin-top: 40px; padding: 20px 0; }
   footer p { color: var(--muted); font-size: 13px; font-family: 'Syne', sans-serif; letter-spacing: 0.08em; }
 </style>
@@ -379,7 +439,7 @@ HTML ='''<!DOCTYPE html>
         </div>
       </div>
       <div class="field stress-field-custom">
-        <label>How's Your Stress Level?</label>
+        <label>How\'s Your Stress Level?</label>
         <input type="hidden" id="stress_level" value="5"/>
         <div class="stress-cards">
           <div class="stress-card" onclick="selectStressCard(this, 2)">
@@ -410,6 +470,63 @@ HTML ='''<!DOCTYPE html>
           <input type="range" id="exercise_days" min="0" max="7" value="3"
                  oninput="document.getElementById('ex-val').textContent=this.value"/>
           <div class="range-labels"><span>0</span><span>7</span></div>
+        </div>
+      </div>
+
+      <!-- Job / Daily Activity Type -->
+      <div class="field job-field-custom">
+        <label>Job / Daily Activity Type
+          <span style="font-size:11px; color:var(--muted); font-weight:400; margin-left:6px;">
+            — counts toward your overall activity score
+          </span>
+        </label>
+        <input type="hidden" id="job_activity_score" value="1"/>
+        <div class="job-cards">
+          <div class="job-card active" onclick="selectJobCard(this, 1)">
+            <div class="job-emoji">🖥️</div>
+            <div class="job-text">Desk /<br/>Office</div>
+            <div class="job-activity-tag">Sedentary</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 1)">
+            <div class="job-emoji">🏠</div>
+            <div class="job-text">Work<br/>from Home</div>
+            <div class="job-activity-tag">Sedentary</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 2)">
+            <div class="job-emoji">🚗</div>
+            <div class="job-text">Driving /<br/>Transport</div>
+            <div class="job-activity-tag">Light</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 2)">
+            <div class="job-emoji">📚</div>
+            <div class="job-text">Student</div>
+            <div class="job-activity-tag">Light</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 3)">
+            <div class="job-emoji">👟</div>
+            <div class="job-text">On Your<br/>Feet/Teacher</div>
+            <div class="job-activity-tag">Moderate</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 3)">
+            <div class="job-emoji">🧹</div>
+            <div class="job-text">Home-<br/>maker</div>
+            <div class="job-activity-tag">Moderate</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 4)">
+            <div class="job-emoji">🔨</div>
+            <div class="job-text">Daily<br/>Labour</div>
+            <div class="job-activity-tag">Heavy</div>
+          </div>
+          <div class="job-card" onclick="selectJobCard(this, 1)">
+            <div class="job-emoji">🛋️</div>
+            <div class="job-text">Not<br/>Working</div>
+            <div class="job-activity-tag">Sedentary</div>
+          </div>
+        </div>
+        <div class="activity-hint" id="activity-hint">
+          💡 Effective activity score: exercise days <span id="ex-days-hint">3</span> + job bonus
+          <span id="job-bonus-hint">+0</span> =
+          <span id="effective-score-hint">3</span> / 7
         </div>
       </div>
     </div>
@@ -466,6 +583,35 @@ const advice = {
   2: ["Consult a sleep specialist immediately","Set a strict consistent sleep/wake schedule","Avoid all caffeine after 12pm","No screens at least 2 hours before bed","Try meditation or deep breathing exercises","Consider cognitive behavioral therapy for insomnia"]
 };
 
+// keep track of current job bonus for the hint
+let currentJobBonus = 0;
+
+function updateActivityHint() {
+  const ex = +document.getElementById('exercise_days').value;
+  const effective = Math.min(7, ex + currentJobBonus);
+  document.getElementById('ex-days-hint').textContent = ex;
+  document.getElementById('job-bonus-hint').textContent = '+' + currentJobBonus;
+  document.getElementById('effective-score-hint').textContent = effective;
+}
+
+// wire exercise slider to also refresh the hint
+document.getElementById('exercise_days').addEventListener('input', updateActivityHint);
+
+function selectStressCard(element, value) {
+  document.querySelectorAll('.stress-card').forEach(card => card.classList.remove('active'));
+  element.classList.add('active');
+  document.getElementById('stress_level').value = value;
+}
+
+function selectJobCard(element, score) {
+  document.querySelectorAll('.job-card').forEach(card => card.classList.remove('active'));
+  element.classList.add('active');
+  document.getElementById('job_activity_score').value = score;
+  // bonus = score - 1  (sedentary=0, light=1, moderate=2, heavy=3)
+  currentJobBonus = score - 1;
+  updateActivityHint();
+}
+
 async function predict() {
   const btn = document.querySelector('.submit-btn');
   btn.textContent = 'Analyzing...';
@@ -479,25 +625,18 @@ async function predict() {
     exercise_days: +document.getElementById('exercise_days').value,
     stress_level: +document.getElementById('stress_level').value,
     nap_during_day: +document.querySelector('input[name=nap]:checked').value,
-    irregular_schedule: +document.querySelector('input[name=irreg]:checked').value
+    irregular_schedule: +document.querySelector('input[name=irreg]:checked').value,
+    job_activity_score: +document.getElementById('job_activity_score').value
   };
 
   try {
     const response = await fetch('/predict', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-
     const result = await response.json();
-
-    showResult({
-      risk: result.risk,
-      probabilities: result.probabilities
-    });
-
+    showResult({ risk: result.risk, probabilities: result.probabilities });
   } catch (error) {
     console.error(error);
     alert('Prediction failed');
@@ -507,28 +646,17 @@ async function predict() {
   btn.disabled = false;
 }
 
-function selectStressCard(element, value) {
-  // Remove active state from all cards
-  document.querySelectorAll('.stress-card').forEach(card => {
-    card.classList.remove('active');
-  });
-  // Add active state to selected card
-  element.classList.add('active');
-  // Update hidden input
-  document.getElementById('stress_level').value = value;
-}
-
 function showResult(data) {
-  const icons = {0:'😴', 1:'😟', 2:'🚨'};
+  const icons  = {0:'😴', 1:'😟', 2:'🚨'};
   const labels = {0:'Low Risk', 1:'Medium Risk', 2:'High Risk'};
   const colors = {0:'#4ade80', 1:'#fbbf24', 2:'#f87171'};
-  const descs = {
+  const descs  = {
     0: 'Your lifestyle habits support healthy sleep. Keep it up!',
     1: 'Some habits may be affecting your sleep quality. Small changes can help.',
     2: 'Your lifestyle patterns strongly suggest insomnia risk. Please seek help.'
   };
 
-  const r = data.risk;
+  const r  = data.risk;
   const el = document.getElementById('result');
   el.style.display = 'block';
   el.innerHTML = `
@@ -556,7 +684,6 @@ function showResult(data) {
     <button class="reset-btn" onclick="document.getElementById('result').style.display='none'">Reassess ↺</button>
   `;
   el.scrollIntoView({behavior:'smooth'});
-  
   setTimeout(() => {
     document.getElementById('low-bar').style.width  = data.probabilities[0] + '%';
     document.getElementById('mid-bar').style.width  = data.probabilities[1] + '%';
@@ -566,9 +693,11 @@ function showResult(data) {
 </script>
 </body>
 </html>'''
+
 @app.route('/health')
 def health():
     return "OK", 200
+
 @app.route('/')
 def index():
     return render_template_string(HTML)
@@ -576,14 +705,26 @@ def index():
 @app.route('/predict', methods=['POST'])
 def predict():
     d = request.json
-    df = pd.DataFrame([d])
+
+    # ── Blend job activity with exercise days ──────────────────────────────
+    # job_activity_score:  1=sedentary  2=light  3=moderate  4=heavy
+    # job_bonus:           0            1         2            3  extra days
+    # effective_exercise_days = exercise_days + job_bonus  (capped at 7)
+    # This keeps full model-compatibility (same feature name, same range).
+    # When you retrain, you can pass job_activity_score as its own feature.
+    job_score  = int(d.pop('job_activity_score', 1))
+    job_bonus  = job_score - 1                        # 0 / 1 / 2 / 3
+    d['exercise_days'] = min(7, d['exercise_days'] + job_bonus)
+    # ───────────────────────────────────────────────────────────────────────
+
+    df   = pd.DataFrame([d])
     risk = int(model.predict(df)[0])
     probs = model.predict_proba(df)[0]
     return jsonify({
         'risk': risk,
-        'probabilities': [round(p*100,1) for p in probs]
+        'probabilities': [round(p * 100, 1) for p in probs]
     })
 
-# NEW - works everywhere
+# Works everywhere
 if __name__ == '__main__':
     app.run(debug=False, use_reloader=False, port=5000)
