@@ -537,7 +537,7 @@ HTML ='''<!DOCTYPE html>
         <label>Screen Time Before Bed: <span class="val-badge" id="screen-val">2</span>h</label>
         <input type="range" id="screen_time" min="0" max="10" step="0.5" value="2"
                oninput="document.getElementById('screen-val').textContent=this.value"/>
-        <div class="range-labels"><span>0h</span><span>6h</span></div>
+        <div class="range-labels"><span>0h</span><span>10h</span></div>
       </div>
       <div class="field">
         <label>Caffeine Cups/Day: <span class="val-badge" id="caff-val">2</span></label>
@@ -725,6 +725,5 @@ def predict():
         'probabilities': [round(p * 100, 1) for p in probs]
     })
 
-# Works everywhere
 if __name__ == '__main__':
     app.run(debug=False, use_reloader=False, port=5000)
