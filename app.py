@@ -524,7 +524,7 @@ HTML ='''<!DOCTYPE html>
             <div class="job-emoji">🛋️</div>
             <div class="job-text">Not Working</div>
             <div class="job-desc">mostly inactive at home</div>
-            <div class="job-activity-tag">Sedentary</div>
+            <div class="job-activity-tag">Low</div>
           </div>
         </div>
         <div class="activity-hint" id="activity-hint">
