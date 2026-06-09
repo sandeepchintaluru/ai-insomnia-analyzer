@@ -343,11 +343,10 @@ HTML ='''<!DOCTYPE html>
   }
   .stress-card.active .stress-text { color: var(--accent); }
 
-  /* ── Job Activity Cards ── */
   .job-field-custom { grid-column: 1 / -1; }
   .job-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 10px;
     margin-top: 12px;
   }
@@ -362,7 +361,7 @@ HTML ='''<!DOCTYPE html>
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
   }
   .job-card:hover {
     border-color: var(--accent2);
@@ -375,13 +374,10 @@ HTML ='''<!DOCTYPE html>
     box-shadow: 0 0 0 2px rgba(247, 106, 140, 0.2);
   }
   .job-emoji { font-size: 26px; line-height: 1; }
-  .job-text {
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.3;
-    font-weight: 500;
-  }
+  .job-text { font-size: 12px; color: var(--text); line-height: 1.3; font-weight: 600; }
   .job-card.active .job-text { color: var(--accent2); }
+  .job-desc { font-size: 10px; color: var(--muted); line-height: 1.4; font-weight: 400; font-style: italic; }
+  .job-card.active .job-desc { color: rgba(247,106,140,0.7); }
   .job-activity-tag {
     font-size: 10px;
     font-weight: 600;
@@ -484,42 +480,50 @@ HTML ='''<!DOCTYPE html>
         <div class="job-cards">
           <div class="job-card active" onclick="selectJobCard(this, 1)">
             <div class="job-emoji">🖥️</div>
-            <div class="job-text">Desk /<br/>Office</div>
-            <div class="job-activity-tag">Sedentary</div>
+            <div class="job-text">Desk / Office</div>
+            <div class="job-desc">sitting most of the day</div>
+            <div class="job-activity-tag">low</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 1)">
             <div class="job-emoji">🏠</div>
-            <div class="job-text">Work<br/>from Home</div>
-            <div class="job-activity-tag">Sedentary</div>
+            <div class="job-text">Work from Home</div>
+            <div class="job-desc">seated, minimal movement</div>
+            <div class="job-activity-tag">low</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 2)">
             <div class="job-emoji">🚗</div>
-            <div class="job-text">Driving /<br/>Transport</div>
+            <div class="job-text">Driving / Transport</div>
+            <div class="job-desc">seated, short walks</div>
             <div class="job-activity-tag">Light</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 2)">
             <div class="job-emoji">📚</div>
             <div class="job-text">Student</div>
+            <div class="job-desc">mostly sitting, campus walks</div>
             <div class="job-activity-tag">Light</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 3)">
             <div class="job-emoji">👟</div>
-            <div class="job-text">On Your<br/>Feet/Teacher</div>
+            <div class="job-text">On Your Feet</div>
+            <div class="job-desc">standing & walking all day</div>
             <div class="job-activity-tag">Moderate</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 3)">
             <div class="job-emoji">🧹</div>
-            <div class="job-text">Home-<br/>maker</div>
+            <div class="job-text">Homemaker</div>
+            <div class="job-desc">light chores & childcare</div>
             <div class="job-activity-tag">Moderate</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 4)">
             <div class="job-emoji">🔨</div>
-            <div class="job-text">Daily<br/>Labour</div>
+            <div class="job-text">Daily Labour</div>
+            <div class="job-desc">heavy physical work all day</div>
             <div class="job-activity-tag">Heavy</div>
           </div>
           <div class="job-card" onclick="selectJobCard(this, 1)">
             <div class="job-emoji">🛋️</div>
-            <div class="job-text">Not<br/>Working</div>
+            <div class="job-text">Not Working</div>
+            <div class="job-desc">mostly inactive at home</div>
             <div class="job-activity-tag">Sedentary</div>
           </div>
         </div>
@@ -535,9 +539,9 @@ HTML ='''<!DOCTYPE html>
     <div class="grid">
       <div class="field">
         <label>Screen Time Before Bed: <span class="val-badge" id="screen-val">2</span>h</label>
-        <input type="range" id="screen_time" min="0" max="10" step="0.5" value="2"
+        <input type="range" id="screen_time" min="0" max="13" step="0.5" value="2"
                oninput="document.getElementById('screen-val').textContent=this.value"/>
-        <div class="range-labels"><span>0h</span><span>10h</span></div>
+        <div class="range-labels"><span>0h</span><span>13h</span></div>
       </div>
       <div class="field">
         <label>Caffeine Cups/Day: <span class="val-badge" id="caff-val">2</span></label>
@@ -725,5 +729,6 @@ def predict():
         'probabilities': [round(p * 100, 1) for p in probs]
     })
 
+# Works everywhere
 if __name__ == '__main__':
     app.run(debug=False, use_reloader=False, port=5000)
