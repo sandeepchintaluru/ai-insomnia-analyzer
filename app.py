@@ -405,13 +405,21 @@ HTML ='''<!DOCTYPE html>
 
   footer { text-align: center; margin-top: 40px; padding: 20px 0; }
   footer p { color: var(--muted); font-size: 13px; font-family: 'Syne', sans-serif; letter-spacing: 0.08em; }
+
+.title-wrap{display:flex;justify-content:center;align-items:flex-start;gap:10px}
+.info-btn{width:38px;height:38px;border:none;border-radius:50%;background:rgba(124,106,247,.15);color:#7c6af7;cursor:pointer;font-size:20px}
+.info-btn:hover{background:#7c6af7;color:#fff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999}
+.modal-content{background:#1a1a26;color:#e8e8f0;max-width:650px;margin:5% auto;padding:28px;border-radius:18px;border:1px solid #2a2a3d}
+.close{float:right;font-size:30px;cursor:pointer}
+
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <div class="badge">AI-Powered Assessment</div>
-    <h1>Insomnia Risk<br/>Analyzer</h1>
+    <div class="title-wrap"><h1>Insomnia Risk<br/>Analyzer</h1><button class="info-btn" onclick="openInfo()">ℹ️</button></div>
     <p class="subtitle">Answer a few questions about your lifestyle<br/>and our AI will assess your insomnia risk.</p>
   </header>
 
@@ -694,7 +702,14 @@ function showResult(data) {
     document.getElementById('high-bar').style.width = data.probabilities[2] + '%';
   }, 100);
 }
+
+function openInfo(){document.getElementById('infoModal').style.display='block';}
+function closeInfo(){document.getElementById('infoModal').style.display='none';}
+window.addEventListener('click',e=>{let m=document.getElementById('infoModal');if(e.target===m)m.style.display='none';});
+
 </script>
+
+<div id="infoModal" class="modal"><div class="modal-content"><span class="close" onclick="closeInfo()">&times;</span><h2>What is Insomnia?</h2><p>Insomnia is a sleep disorder that makes it difficult to fall asleep, stay asleep, or wake feeling refreshed.</p><h3>Common Symptoms</h3><ul><li>Difficulty falling asleep</li><li>Frequent night waking</li><li>Early morning awakening</li><li>Daytime tiredness</li></ul><h3>Common Causes</h3><ul><li>Stress and anxiety</li><li>Excess screen time before bed</li><li>Caffeine late in the day</li><li>Irregular sleep schedule</li></ul><p><b>Note:</b> This AI tool estimates risk only and is not a medical diagnosis.</p></div></div>
 </body>
 </html>'''
 
@@ -732,3 +747,4 @@ def predict():
 # Works everywhere
 if __name__ == '__main__':
     app.run(debug=False, use_reloader=False, port=5000)
+
