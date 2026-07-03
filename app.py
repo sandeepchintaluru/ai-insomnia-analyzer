@@ -582,10 +582,6 @@ HTML ='''<!DOCTYPE html>
 
   <div id="result"></div>
 
-  <footer>
-    <p>Developed with <span style="color:#7c6af7; font-weight:500;"> love❤️ </span> by <span style="color:#7c6af7; font-weight:500;"> hari Mayya</span></p>
-  </footer>
-
 </div>
 
 <script>
